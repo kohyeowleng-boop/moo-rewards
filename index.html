@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Moo Milking Rewards</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --bg:#FDFAF5;
+  --card:#FFFFFF;
+  --text1:#2C2416;
+  --text2:#7A6E5A;
+  --text3:#B0A898;
+  --border:#EAE2D4;
+  --shadow:0 4px 24px rgba(44,36,22,.09);
+  --shadow-sm:0 2px 10px rgba(44,36,22,.06);
+  --lm:#D4891A;
+  --ll:#FDF5E8;
+  --ld:#7A4D0A;
+  --la:#E8A030;
+  --radius:20px;
+}
+
+body{
+  font-family:'Nunito',sans-serif;
+  background:var(--bg);
+  color:var(--text1);
+  min-height:100vh;
+  max-width:430px;
+  margin:0 auto;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ── HEADER ── */
+.hdr{
+  padding:24px 20px 32px;
+  position:relative;
+  overflow:hidden;
+  background:#FFE4EC;
+}
+.hdr-blob1{
+  position:absolute;top:-60px;right:-60px;
+  width:200px;height:200px;border-radius:50%;
+  background:rgba(255,255,255,.55);pointer-events:none;
+}
+.hdr-blob2{
+  position:absolute;bottom:-40px;left:-40px;
+  width:140px;height:140px;border-radius:50%;
+  background:rgba(255,255,255,.42);pointer-events:none;
+}
+.hdr-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;position:relative;z-index:2}
+.app-name{
+  font-family:'Cormorant Garamond',serif;
+  font-size:19px;font-weight:600;
+  color:#7A3048;letter-spacing:.4px;
+}
+.lvl-badge{
+  color:#fff;font-size:10px;font-weight:800;
+  letter-spacing:1.8px;text-transform:uppercase;
+  padding:4px 13px;border-radius:20px;
+  border:none;
+}
+.hdr-body{
+  display:flex;align-items:flex-end;
+  justify-content:space-between;
+  margin-bottom:2px;position:relative;z-index:2;
+}
+.hdr-text{flex:1;min-width:0}
+.hdr-cow{flex-shrink:0;margin-left:6px;position:relative;z-index:2;margin-bottom:-12px}
+.lvl-oval{
+  display:inline-flex;align-items:center;
+  border-radius:50px;
+  padding:5px 26px 7px;
+  margin-bottom:9px;
+  transition:background .4s ease;
+}
+.lvl-oval-name{
+  font-family:'Cormorant Garamond',serif;
+  font-size:42px;font-weight:700;color:#fff;
+  line-height:1;display:block;
+  white-space:nowrap;
+}
+.lvl-sub{font-size:13px;color:#9A5068;font-weight:600;position:relative}
+.prog-wrap{
+  margin-top:16px;background:rgba(122,48,72,.12);
+  border-radius:8px;height:7px;overflow:hidden;position:relative;z-index:2;
+}
+.prog-bar{
+  height:100%;background:var(--lm);border-radius:8px;
+  transition:width .7s cubic-bezier(.4,0,.2,1);width:0%;
+}
+.prog-text{
+  display:flex;justify-content:space-between;
+  margin-top:7px;font-size:12px;
+  color:#7A3048;font-weight:700;
+  position:relative;z-index:2;
+}
+
+/* ── MAIN ── */
+.main{padding:18px 16px 0}
+
+/* ── STATS ── */
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.stat{
+  background:var(--card);border-radius:16px;
+  padding:14px 15px;box-shadow:var(--shadow-sm);
+  border:1px solid var(--border);
+}
+.stat-lbl{font-size:10px;font-weight:800;color:var(--text3);text-transform:uppercase;letter-spacing:.9px;margin-bottom:4px}
+.stat-val{
+  font-family:'Cormorant Garamond',serif;
+  font-size:30px;font-weight:700;color:var(--text1);line-height:1;
+}
+.stat-sub{font-size:11px;color:var(--text3);margin-top:2px}
+
+/* ── CARD ── */
+.card{
+  background:var(--card);border-radius:var(--radius);
+  padding:18px 16px;box-shadow:var(--shadow);
+  margin-bottom:14px;border:1px solid var(--border);
+}
+.card-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:19px;font-weight:600;color:var(--text1);margin-bottom:2px;
+}
+.card-sub{font-size:11px;color:var(--text3);margin-bottom:14px}
+
+/* ── GRID ── */
+.grid{display:grid;grid-template-columns:repeat(5,1fr);gap:7px}
+.circle{
+  aspect-ratio:1;border-radius:50%;
+  border:2px solid var(--border);background:#FAFAF8;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  cursor:pointer;transition:transform .15s ease,box-shadow .15s ease,border-color .25s;
+  position:relative;-webkit-tap-highlight-color:transparent;
+  user-select:none;
+}
+.circle:active{transform:scale(.88)}
+.circle-num{font-size:13px;font-weight:800;color:var(--text3)}
+.circle.filled{border-color:var(--lm);background:var(--ll)}
+.circle.filled .circle-num{display:none}
+.circle.next-up{
+  border-color:var(--la);border-style:dashed;
+  background:var(--ll);
+  animation:pulse-ring 2.2s ease-in-out infinite;
+}
+.circle.next-up .circle-num{color:var(--lm)}
+@keyframes pulse-ring{
+  0%,100%{box-shadow:0 0 0 0 rgba(0,0,0,0)}
+  50%{box-shadow:0 0 0 5px rgba(232,160,48,.18)}
+}
+.circle-check{display:none;flex-direction:column;align-items:center;gap:1px}
+.circle.filled .circle-check{display:flex}
+.circle-ico{font-size:15px;line-height:1}
+.circle-dt{
+  font-size:7.5px;font-weight:800;line-height:1;
+  text-align:center;color:var(--ld);
+}
+
+/* ── CELEBRATION ── */
+.celeb{
+  display:none;text-align:center;
+  padding:22px 18px;background:var(--ll);
+  border-radius:var(--radius);border:2px solid var(--la);
+  margin-bottom:14px;position:relative;overflow:hidden;
+}
+.celeb.show{display:block}
+.celeb-ico{font-size:52px;animation:bounce .7s ease;margin-bottom:8px}
+@keyframes bounce{0%,100%{transform:translateY(0)}40%{transform:translateY(-14px)}}
+.celeb-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:26px;font-weight:700;color:var(--ld);margin-bottom:5px;
+}
+.celeb-text{font-size:13px;color:var(--text2);margin-bottom:18px;line-height:1.5}
+.btn-advance{
+  display:inline-block;padding:13px 28px;
+  border:none;border-radius:24px;
+  background:var(--lm);color:#fff;
+  font-family:'Nunito',sans-serif;
+  font-size:15px;font-weight:800;cursor:pointer;
+  transition:transform .15s ease;
+  -webkit-tap-highlight-color:transparent;
+}
+.btn-advance:active{transform:scale(.95)}
+
+/* ── JOURNEY ROW ── */
+.journey{display:flex;gap:7px;overflow-x:auto;padding:2px 0;scrollbar-width:none}
+.journey::-webkit-scrollbar{display:none}
+.jpill{
+  flex-shrink:0;padding:6px 13px;border-radius:20px;
+  font-size:11px;font-weight:800;letter-spacing:.4px;
+  border:1.5px solid;display:flex;align-items:center;gap:5px;
+  transition:opacity .2s;white-space:nowrap;
+}
+.jpill.clickable{cursor:pointer}
+.jpill.locked{opacity:.3;border-style:dashed}
+
+/* ── HISTORY ── */
+.h-item{display:flex;align-items:center;gap:11px;padding:9px 0;border-bottom:1px solid var(--border)}
+.h-item:last-child{border-bottom:none}
+.h-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.h-lbl{flex:1;font-size:13px;font-weight:700;color:var(--text1)}
+.h-dt{font-size:11px;color:var(--text3)}
+
+/* ── FOOTER BTN ── */
+.reset-btn{
+  width:100%;background:none;border:none;
+  color:var(--text3);font-size:12px;padding:10px;
+  cursor:pointer;margin-bottom:30px;
+  font-family:'Nunito',sans-serif;
+  transition:color .2s;
+}
+.reset-btn:hover{color:var(--text2)}
+
+/* ── MODAL ── */
+.overlay{
+  position:fixed;inset:0;
+  background:rgba(30,20,10,.52);
+  display:flex;align-items:flex-end;justify-content:center;
+  z-index:100;opacity:0;pointer-events:none;
+  transition:opacity .28s ease;
+}
+.overlay.open{opacity:1;pointer-events:all}
+.modal{
+  background:#fff;border-radius:26px 26px 0 0;
+  padding:22px 20px 44px;width:100%;max-width:430px;
+  transform:translateY(100%);
+  transition:transform .38s cubic-bezier(.4,0,.2,1);
+}
+.overlay.open .modal{transform:translateY(0)}
+.modal-handle{width:38px;height:4px;background:#E8E0D4;border-radius:2px;margin:0 auto 20px}
+.modal-title{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:700;color:var(--text1);margin-bottom:3px}
+.modal-sub{font-size:12px;color:var(--text3);margin-bottom:20px}
+.date-inp{
+  width:100%;padding:14px 16px;
+  border:1.5px solid var(--border);border-radius:13px;
+  font-family:'Nunito',sans-serif;font-size:17px;
+  font-weight:700;color:var(--text1);background:var(--bg);
+  margin-bottom:14px;outline:none;
+  transition:border-color .2s;
+  -webkit-appearance:none;
+}
+.date-inp:focus{border-color:var(--lm)}
+.btn-save{
+  width:100%;padding:17px;border:none;border-radius:15px;
+  background:var(--lm);color:#fff;
+  font-family:'Nunito',sans-serif;font-size:16px;font-weight:800;
+  cursor:pointer;transition:transform .15s ease;
+  -webkit-tap-highlight-color:transparent;
+}
+.btn-save:active{transform:scale(.97)}
+.btn-cancel{
+  width:100%;padding:13px;border:none;border-radius:15px;
+  background:transparent;color:var(--text2);
+  font-family:'Nunito',sans-serif;font-size:14px;font-weight:600;cursor:pointer;margin-top:7px;
+}
+.btn-clear{
+  width:100%;padding:10px;border:none;border-radius:12px;
+  background:#FFF0F0;color:#C04040;
+  font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;
+  cursor:pointer;margin-top:6px;display:none;
+}
+
+/* ── CONFETTI ── */
+@keyframes confetti-fall{
+  0%{transform:translateY(-80px) rotate(0deg);opacity:1}
+  100%{transform:translateY(105vh) rotate(900deg);opacity:0}
+}
+.cfpcs{
+  position:fixed;width:9px;height:9px;
+  border-radius:2px;pointer-events:none;z-index:300;
+  animation:confetti-fall linear forwards;
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="hdr" id="hdr">
+  <div class="hdr-blob1"></div>
+  <div class="hdr-blob2"></div>
+  <div class="hdr-top">
+    <div class="app-name">🐄 Moo Milking Rewards</div>
+    <div class="lvl-badge" id="lvlBadge">Level 1</div>
+  </div>
+  <div class="hdr-body">
+    <div class="hdr-text">
+      <div class="lvl-oval" id="lvlOval"><span class="lvl-oval-name" id="lvlName">Bronze</span></div>
+      <div class="lvl-sub" id="lvlSub">Milkmaid · Sessions 1–25</div>
+    </div>
+    <div class="hdr-cow">
+      <!-- Ghibli-style cow SVG -->
+      <svg viewBox="0 0 96 118" xmlns="http://www.w3.org/2000/svg" style="width:112px;display:block;filter:drop-shadow(0 3px 8px rgba(122,48,72,.18))">
+        <!-- BODY -->
+        <ellipse cx="48" cy="92" rx="36" ry="22" fill="#FFF0E0" stroke="#C89060" stroke-width="2"/>
+        <!-- Body spots -->
+        <ellipse cx="35" cy="89" rx="12" ry="8" fill="#D4A070" opacity=".28" transform="rotate(-8,35,89)"/>
+        <ellipse cx="62" cy="96" rx="8" ry="5.5" fill="#D4A070" opacity=".22"/>
+        <!-- LEGS -->
+        <rect x="22" y="106" width="10" height="12" rx="5" fill="#FFF0E0" stroke="#C89060" stroke-width="1.8"/>
+        <rect x="36" y="108" width="10" height="10" rx="5" fill="#FFF0E0" stroke="#C89060" stroke-width="1.8"/>
+        <rect x="50" y="108" width="10" height="10" rx="5" fill="#FFF0E0" stroke="#C89060" stroke-width="1.8"/>
+        <rect x="64" y="106" width="10" height="12" rx="5" fill="#FFF0E0" stroke="#C89060" stroke-width="1.8"/>
+        <!-- Hooves -->
+        <rect x="22" y="114" width="10" height="5" rx="2.5" fill="#B07838"/>
+        <rect x="36" y="114" width="10" height="5" rx="2.5" fill="#B07838"/>
+        <rect x="50" y="114" width="10" height="5" rx="2.5" fill="#B07838"/>
+        <rect x="64" y="114" width="10" height="5" rx="2.5" fill="#B07838"/>
+        <!-- TAIL -->
+        <path d="M83,80 Q97,66 90,54 Q84,44 91,38" fill="none" stroke="#C89060" stroke-width="2.5" stroke-linecap="round"/>
+        <ellipse cx="92" cy="35" rx="5" ry="7" fill="#C89060" transform="rotate(12,92,35)"/>
+        <!-- NECK -->
+        <ellipse cx="48" cy="73" rx="18" ry="10" fill="#FFF0E0" stroke="#C89060" stroke-width="1.5"/>
+        <!-- HEAD -->
+        <circle cx="48" cy="46" r="30" fill="#FFF0E0" stroke="#C89060" stroke-width="2.2"/>
+        <!-- EARS -->
+        <ellipse cx="20" cy="37" rx="11" ry="7" fill="#FFF0E0" stroke="#C89060" stroke-width="1.8" transform="rotate(-28,20,37)"/>
+        <ellipse cx="20" cy="37" rx="7" ry="4.5" fill="#F9B0C0" transform="rotate(-28,20,37)"/>
+        <ellipse cx="76" cy="37" rx="11" ry="7" fill="#FFF0E0" stroke="#C89060" stroke-width="1.8" transform="rotate(28,76,37)"/>
+        <ellipse cx="76" cy="37" rx="7" ry="4.5" fill="#F9B0C0" transform="rotate(28,76,37)"/>
+        <!-- HORNS -->
+        <path d="M31,20 Q26,8 33,6 Q39,8 36,20" fill="#EAD868" stroke="#C0A830" stroke-width="1.2"/>
+        <path d="M65,20 Q70,8 63,6 Q57,8 60,20" fill="#EAD868" stroke="#C0A830" stroke-width="1.2"/>
+        <!-- FLOWER CROWN – between horns -->
+        <!-- petals left flower -->
+        <circle cx="37" cy="11" r="4.2" fill="#FF98BE"/>
+        <circle cx="32" cy="8"  r="3.6" fill="#FFCCE0"/>
+        <circle cx="37" cy="5"  r="3.8" fill="#FF88B4"/>
+        <circle cx="42" cy="8"  r="3.6" fill="#FFCCE0"/>
+        <circle cx="37" cy="11" r="2.4" fill="#FFE090"/>
+        <!-- petals right flower -->
+        <circle cx="59" cy="11" r="4.2" fill="#FF98BE"/>
+        <circle cx="54" cy="8"  r="3.6" fill="#FFCCE0"/>
+        <circle cx="59" cy="5"  r="3.8" fill="#FF88B4"/>
+        <circle cx="64" cy="8"  r="3.6" fill="#FFCCE0"/>
+        <circle cx="59" cy="11" r="2.4" fill="#FFE090"/>
+        <!-- tiny leaf between -->
+        <ellipse cx="48" cy="7" rx="4" ry="2.5" fill="#7DC870" transform="rotate(-8,48,7)"/>
+        <ellipse cx="48" cy="7" rx="4" ry="2.5" fill="#90D880" transform="rotate(8,48,7)" opacity=".7"/>
+        <!-- HEAD SPOT -->
+        <ellipse cx="42" cy="34" rx="10" ry="7" fill="#D4A070" opacity=".18" transform="rotate(-12,42,34)"/>
+        <!-- EYES – large Ghibli ovals -->
+        <ellipse cx="36" cy="45" rx="9.5" ry="10.5" fill="#2C1808"/>
+        <ellipse cx="60" cy="45" rx="9.5" ry="10.5" fill="#2C1808"/>
+        <!-- Big round shine highlights -->
+        <circle cx="39.5" cy="40.5" r="4.8" fill="white"/>
+        <circle cx="63.5" cy="40.5" r="4.8" fill="white"/>
+        <!-- Small secondary shine -->
+        <circle cx="38" cy="46" r="2" fill="white" opacity=".48"/>
+        <circle cx="62" cy="46" r="2" fill="white" opacity=".48"/>
+        <!-- EYELASHES -->
+        <path d="M28,40 Q29,34 33,39" fill="none" stroke="#2C1808" stroke-width="1.4" stroke-linecap="round"/>
+        <path d="M40,37 Q42,32 45,37" fill="none" stroke="#2C1808" stroke-width="1.4" stroke-linecap="round"/>
+        <path d="M51,37 Q54,32 57,37" fill="none" stroke="#2C1808" stroke-width="1.4" stroke-linecap="round"/>
+        <path d="M67,37 Q71,34 72,40" fill="none" stroke="#2C1808" stroke-width="1.4" stroke-linecap="round"/>
+        <!-- ROSY CHEEKS -->
+        <ellipse cx="23" cy="55" rx="9.5" ry="6" fill="#F9A0B8" opacity=".58"/>
+        <ellipse cx="73" cy="55" rx="9.5" ry="6" fill="#F9A0B8" opacity=".58"/>
+        <!-- MUZZLE -->
+        <ellipse cx="48" cy="60" rx="16" ry="11" fill="#F9C8B0"/>
+        <!-- Nostrils -->
+        <ellipse cx="43" cy="61" rx="3.5" ry="2.8" fill="#D89080" opacity=".68"/>
+        <ellipse cx="53" cy="61" rx="3.5" ry="2.8" fill="#D89080" opacity=".68"/>
+        <!-- SMILE -->
+        <path d="M41,66 Q48,73 55,66" fill="none" stroke="#D08898" stroke-width="2.2" stroke-linecap="round"/>
+      </svg>
+    </div>
+  </div>
+  <div class="prog-wrap"><div class="prog-bar" id="progBar"></div></div>
+  <div class="prog-text">
+    <span id="progCount">0 / 25</span>
+    <span id="progPct">0%</span>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- CELEBRATION -->
+  <div class="celeb" id="celeb">
+    <div class="celeb-ico" id="celebIco">🎉</div>
+    <div class="celeb-title" id="celebTitle">Level Complete!</div>
+    <div class="celeb-text" id="celebText">You've done it! Advance to the next level.</div>
+    <button class="btn-advance" id="btnAdvance" onclick="goNextLevel()">Advance →</button>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-lbl">Total Milkings</div>
+      <div class="stat-val" id="totalVal">0</div>
+      <div class="stat-sub">all levels</div>
+    </div>
+    <div class="stat">
+      <div class="stat-lbl">Levels Done</div>
+      <div class="stat-val" id="lvlsDoneVal">0</div>
+      <div class="stat-sub">of 5 total</div>
+    </div>
+  </div>
+
+  <!-- REWARDS CARD -->
+  <div class="card">
+    <div class="card-title" id="cardTitle">🥉 Bronze Milkmaid</div>
+    <div class="card-sub">Tap any circle to record a milking session</div>
+    <div class="grid" id="grid"></div>
+  </div>
+
+  <!-- JOURNEY -->
+  <div class="card">
+    <div class="card-title">Your Journey</div>
+    <div class="card-sub">Tap a completed level to review it</div>
+    <div class="journey" id="journey"></div>
+  </div>
+
+  <!-- HISTORY -->
+  <div class="card">
+    <div class="card-title">Recent Sessions</div>
+    <div class="card-sub">Your last 6 milking records</div>
+    <div id="histList"><p style="font-size:13px;color:var(--text3);text-align:center;padding:12px 0">No sessions recorded yet</p></div>
+  </div>
+
+  <button class="reset-btn" onclick="resetAll()">↺ Reset all data</button>
+</div>
+
+<!-- DATE MODAL -->
+<div class="overlay" id="overlay" onclick="outsideClose(event)">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="mTitle">Record Milking</div>
+    <div class="modal-sub" id="mSub">Session #1 · Bronze Milkmaid</div>
+    <input type="date" class="date-inp" id="dateInp">
+    <button class="btn-save" id="btnSave" onclick="saveRecord()">🐄 Record this milking</button>
+    <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+    <button class="btn-clear" id="btnClear" onclick="clearRecord()">Remove this record</button>
+  </div>
+</div>
+
+<script>
+const LEVELS=[
+  {name:'Bronze',  emoji:'🥉',sub:'Milkmaid',      col:'#C4781A',lt:'#FDF2E2',dk:'#7A4A0A',ac:'#E8A030',hd:'#A8620E'},
+  {name:'Silver',  emoji:'🥈',sub:'Dairy Hand',    col:'#7A90A8',lt:'#EEF3F8',dk:'#3E5268',ac:'#9AB0C6',hd:'#5A7090'},
+  {name:'Gold',    emoji:'🥇',sub:'Farm Steward',  col:'#C09010',lt:'#FFFAE8',dk:'#806008',ac:'#E8C030',hd:'#A07808'},
+  {name:'Platinum',emoji:'✨',sub:'Dairy Artisan',  col:'#1E9A72',lt:'#E6FAF2',dk:'#0E6B4E',ac:'#38C896',hd:'#147A5A'},
+  {name:'Diamond', emoji:'💎',sub:'Master Dairymaid',col:'#6858C8',lt:'#EEEAFF',dk:'#3E2EA0',ac:'#8878E8',hd:'#5040B0'},
+];
+const TOTAL=25;
+let selCircle=null;
+let state=load();
+
+function load(){
+  try{const s=localStorage.getItem('mooV2');if(s)return JSON.parse(s)}catch(e){}
+  return{cur:0,lvls:LEVELS.map(()=>Array(TOTAL).fill(null))};
+}
+function persist(){try{localStorage.setItem('mooV2',JSON.stringify(state))}catch(e){}}
+
+function theme(i){
+  const L=LEVELS[i];
+  const r=document.documentElement;
+  r.style.setProperty('--lm',L.col);
+  r.style.setProperty('--ll',L.lt);
+  r.style.setProperty('--ld',L.dk);
+  r.style.setProperty('--la',L.ac);
+  document.getElementById('hdr').style.background='#FFE4EC';
+  document.getElementById('lvlOval').style.background=L.col;
+  document.getElementById('lvlBadge').style.background=L.col;
+  document.getElementById('btnSave').style.background=L.col;
+}
+
+function render(){
+  const i=state.cur;
+  const L=LEVELS[i];
+  const recs=state.lvls[i];
+  const filled=recs.filter(Boolean).length;
+  const pct=Math.round(filled/TOTAL*100);
+
+  theme(i);
+
+  // header
+  document.getElementById('lvlBadge').textContent=`Level ${i+1}`;
+  document.getElementById('lvlName').textContent=L.name;
+  document.getElementById('lvlSub').textContent=`${L.sub} · Sessions ${i*25+1}–${(i+1)*25}`;
+  document.getElementById('progBar').style.width=pct+'%';
+  document.getElementById('progCount').textContent=`${filled} / ${TOTAL}`;
+  document.getElementById('progPct').textContent=pct+'%';
+  document.getElementById('cardTitle').textContent=`${L.emoji} ${L.name} ${L.sub}`;
+
+  // stats
+  const total=state.lvls.reduce((s,l)=>s+l.filter(Boolean).length,0);
+  const done=state.lvls.filter((l,idx)=>idx<i||l.filter(Boolean).length===TOTAL).length;
+  document.getElementById('totalVal').textContent=total;
+  document.getElementById('lvlsDoneVal').textContent=done;
+
+  // grid
+  const grid=document.getElementById('grid');
+  grid.innerHTML='';
+  const nextEmpty=recs.findIndex(r=>!r);
+
+  recs.forEach((dt,idx)=>{
+    const div=document.createElement('div');
+    div.className='circle'+(dt?' filled':'')+(idx===nextEmpty&&!dt?' next-up':'');
+    div.onclick=()=>openModal(idx);
+
+    const num=document.createElement('div');
+    num.className='circle-num';
+    num.textContent=idx+1;
+
+    const chk=document.createElement('div');
+    chk.className='circle-check';
+
+    if(dt){
+      const ic=document.createElement('div');ic.className='circle-ico';ic.textContent='🐄';
+      const dd=document.createElement('div');dd.className='circle-dt';
+      const d=new Date(dt+'T00:00:00');
+      dd.textContent=`${d.getDate()} ${d.toLocaleString('en',{month:'short'})}`;
+      chk.appendChild(ic);chk.appendChild(dd);
+    }
+    div.appendChild(num);div.appendChild(chk);
+    grid.appendChild(div);
+  });
+
+  // celebration
+  const cel=document.getElementById('celeb');
+  if(filled===TOTAL){
+    cel.classList.add('show');
+    document.getElementById('celebIco').textContent=L.emoji;
+    if(i<LEVELS.length-1){
+      const NL=LEVELS[i+1];
+      document.getElementById('celebTitle').textContent=`${L.name} Complete!`;
+      document.getElementById('celebText').textContent=`Amazing — ${TOTAL} milkings recorded. Ready to advance to ${NL.name} ${NL.emoji}?`;
+      document.getElementById('btnAdvance').textContent=`Advance to ${NL.name} ${NL.emoji} →`;
+      document.getElementById('btnAdvance').style.display='inline-block';
+    } else {
+      document.getElementById('celebTitle').textContent='👑 Dairy Legend!';
+      document.getElementById('celebText').textContent='You\'ve completed all five levels — 125 milkings! You are a true Master Dairymaid!';
+      document.getElementById('btnAdvance').style.display='none';
+    }
+  } else {
+    cel.classList.remove('show');
+  }
+
+  // journey
+  const jrn=document.getElementById('journey');
+  jrn.innerHTML='';
+  LEVELS.forEach((LJ,ji)=>{
+    const jfilled=state.lvls[ji].filter(Boolean).length;
+    const isActive=ji===state.cur;
+    const isDone=jfilled===TOTAL;
+    const isLocked=ji>state.cur;
+
+    const pill=document.createElement('div');
+    pill.className='jpill'+(isLocked?' locked':'')+((!isLocked&&!isActive)?' clickable':'');
+    pill.style.borderColor=LJ.col;
+    pill.style.background=isActive?LJ.lt:'transparent';
+    pill.style.color=isActive?LJ.dk:(isLocked?'#B0A898':LJ.dk);
+
+    const check=isDone?' ✓':(isLocked?' 🔒':` ${jfilled}/25`);
+    pill.textContent=`${LJ.emoji} ${LJ.name}${check}`;
+
+    if(!isLocked&&!isActive){
+      pill.onclick=()=>{state.cur=ji;render();};
+    }
+    jrn.appendChild(pill);
+  });
+
+  // history
+  buildHistory();
+}
+
+function buildHistory(){
+  const list=document.getElementById('histList');
+  let all=[];
+  state.lvls.forEach((recs,li)=>{
+    recs.forEach((dt,idx)=>{
+      if(dt)all.push({dt,li,idx});
+    });
+  });
+  all.sort((a,b)=>b.dt.localeCompare(a.dt));
+  const recent=all.slice(0,6);
+  if(!recent.length){
+    list.innerHTML='<p style="font-size:13px;color:var(--text3);text-align:center;padding:12px 0">No sessions recorded yet</p>';
+    return;
+  }
+  list.innerHTML=recent.map(s=>{
+    const L=LEVELS[s.li];
+    const d=new Date(s.dt+'T00:00:00');
+    const fmt=d.toLocaleDateString('en-SG',{day:'numeric',month:'short',year:'numeric'});
+    return `<div class="h-item">
+      <div class="h-dot" style="background:${L.col}"></div>
+      <div class="h-lbl">${L.emoji} ${L.name} #${s.idx+1}</div>
+      <div class="h-dt">${fmt}</div>
+    </div>`;
+  }).join('');
+}
+
+function openModal(idx){
+  selCircle=idx;
+  const L=LEVELS[state.cur];
+  document.getElementById('mTitle').textContent='Record Milking';
+  document.getElementById('mSub').textContent=`Session #${idx+1} · ${L.name} ${L.sub}`;
+  const existing=state.lvls[state.cur][idx];
+  const today=new Date().toISOString().split('T')[0];
+  document.getElementById('dateInp').value=existing||today;
+  document.getElementById('btnClear').style.display=existing?'block':'none';
+  document.getElementById('overlay').classList.add('open');
+}
+
+function closeModal(){
+  document.getElementById('overlay').classList.remove('open');
+  selCircle=null;
+}
+
+function outsideClose(e){if(e.target.id==='overlay')closeModal();}
+
+function saveRecord(){
+  const dt=document.getElementById('dateInp').value;
+  if(!dt){alert('Please pick a date');return;}
+  state.lvls[state.cur][selCircle]=dt;
+  persist();closeModal();
+  const filled=state.lvls[state.cur].filter(Boolean).length;
+  render();
+  if(filled===TOTAL)setTimeout(confetti,350);
+}
+
+function clearRecord(){
+  if(!confirm('Remove this milking record?'))return;
+  state.lvls[state.cur][selCircle]=null;
+  persist();closeModal();render();
+}
+
+function goNextLevel(){
+  if(state.cur<LEVELS.length-1){state.cur++;persist();render();window.scrollTo({top:0,behavior:'smooth'});}
+}
+
+function resetAll(){
+  if(!confirm('Reset ALL milking records? This cannot be undone.'))return;
+  state={cur:0,lvls:LEVELS.map(()=>Array(TOTAL).fill(null))};
+  persist();render();
+}
+
+function confetti(){
+  const cols=['#E8A030','#38C896','#8878E8','#F06090','#38B8E0','#E8C030'];
+  for(let i=0;i<50;i++){
+    const el=document.createElement('div');
+    el.className='cfpcs';
+    el.style.cssText=`left:${Math.random()*100}vw;top:-12px;background:${cols[i%cols.length]};animation-duration:${1.4+Math.random()*.8}s;animation-delay:${Math.random()*.6}s;border-radius:${Math.random()>.5?'50%':'2px'};transform:rotate(${Math.random()*360}deg)`;
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(),2600);
+  }
+}
+
+// Set today as default date max
+document.getElementById('dateInp').max=new Date().toISOString().split('T')[0];
+
+render();
+</script>
+</body>
+</html>
